@@ -12,7 +12,7 @@ class Character(object):
 class Human(Character):
 #Represents the human player in the game
     def __init__(self, health, armor, strength, gold):
-        Character.__init__(self, health, armor, strength)
+        Character.__init__(self, health, armor, strength, gold)
         self.name = input("Please enter your name > ")
         self.health = health
         self.armor = armor

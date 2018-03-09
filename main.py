@@ -15,6 +15,8 @@ IsShieldEquipped = False
 IsArmorEquipped = False
 IsDaggerEquipped = False
 IsSwordEquipped = False
+IsScimitarEquipped = False
+IsLongswordEquipped = False
 IsLeatherHideEquipped = False
 SAVEGAME_FILENAME = 'DDSave.json'
 game_state = dict()
@@ -42,7 +44,7 @@ def initialize_game():
     default values.
     """
     
-    player = Human(100, 10, 10, 1000)
+    player = Human(100, 10, 10, 0)
 
     state = dict()
     state['players'] = [player]
@@ -55,10 +57,14 @@ def initialize_game():
 def Shop():
     global IsDaggerEquipped
     global IsSwordEquipped
+    global IsScimitarEquipped
+    global IsLongswordEquipped
     global game_state
     player = game_state['players'][0]
     dagger = Item('Dagger', 0, 0, 10)
     sword = Item('Sword', 0, 0, 15)
+    scimitar = Item('Scimitar', 20, 0, 43)
+    longsword = Item('Longsword', 50, 40, 96)
     leather_hide = Item('Leather Hide', 5, 5, 0)
     if IsShopLocked == True:
         print("The shop is locked!\nPlease go back and continue your adventure!")
@@ -68,14 +74,13 @@ def Shop():
         selection = int(input("Enter a value: "))
 
     if selection == 1:
-        if player.gold >= 50:
-            print("Weapons shop")
-            print("1. Bronze Dagger: $20\n2. Bronze Sword: $50")
-            wpnselection = int(input("Enter a value: "))
+        print("Weapons shop")
+        print("1. Bronze Dagger: $20\n2. Bronze Sword: $50\n3. Bronze Scimitar: $100\n4. Bronze Longsword: $1.000")
+        wpnselection = int(input("Enter a value: "))
 
         if wpnselection == 1:
-            if IsDaggerEquipped == True or IsSwordEquipped == True:
-                print("You already have this or another weapon equipped...")
+            if IsDaggerEquipped == True:
+                print("You already have this weapon equipped...")
                 Game_Loop()
             else:
                 dagger = Item('Dagger', 0, 0, 10)
@@ -86,18 +91,60 @@ def Shop():
                 Game_Loop()
 
         elif wpnselection == 2:
-            if IsDaggerEquipped == True or IsSwordEquipped == True:
-                print("You already have this or another weapon equipped...")
+            if IsSwordEquipped == True:
+                print("You already have this weapon equipped...")
+                Game_Loop()
+            elif IsDaggerEquipped == False:
+                print("You should get a dagger first...")
                 Game_Loop()
             else:
-                sword = Item('Sword', 0, 0, 15)
+                sword = Item('Sword', 0, 0, 22)
                 IsSwordEquipped = True
+                IsDaggerEquipped = False
                 player.strength += sword.strvalue
+                player.strength -= dagger.strvalue
                 player.gold -= 50
                 print("strength increased to: {}".format(player.strength))
                 Game_Loop()
 
         elif wpnselection == 3:
+            
+            if  IsScimitarEquipped == True:
+                print("You already have this weapon equipped...")
+                Game_Loop()
+            elif IsSwordEquipped == False:
+                print("You should get a sword first...")
+                Game_Loop()
+            else:
+                scimitar = Item('Scimitar', 25, 0, 43)
+                IsScimitarEquipped = True
+                IsSwordEquipped = False
+                player.health += scimitar.hvalue
+                player.strength += scimitar.strvalue
+                player.strength -= sword.strvalue
+                player.gold -= 100
+                print("strength increased to: {}".format(player.strength))
+                Game_Loop()
+         
+        elif wpnselection == 4:
+            
+            if  IsLongswordEquipped == True:
+                print("You already have this weapon equipped...")
+                Game_Loop()
+            elif IsScimitarEquipped == False:
+                print("You should get a scimitar first...")
+                Game_Loop()
+            else:
+                longsword = Item('Longsword', 50, 40, 96)
+                IsLongswordEquipped = True
+                IsScimitarEquipped = False
+                player.strength += longsword.strvalue
+                player.strength -= scimitar.strvalue
+                player.gold -= 1000
+                print("strength increased to: {}".format(player.strength))
+                Game_Loop()
+            
+        elif wpnselection == 5:
             Game_Loop()
 
     elif selection == 2:
@@ -142,7 +189,7 @@ def Shop():
 def Combat():
     global game_state
     player = game_state['players'][0]
-    enemy = SpawnMonster(4)
+    enemy = SpawnMonster(randint (1, 17))
     global go
     while go == True:
         pdmg = randint (0, player.strength)
@@ -159,6 +206,9 @@ def Combat():
 
         elif enemy.health <= 0:
             os.system('cls')
+            player.gold += enemy.gold
+            print()
+            print("You have received {}!".format(enemy.gold) + " Gold")
             print()
             print("You have valorously slain the  {}!".format(enemy.name))
             #go = False
@@ -210,6 +260,8 @@ def Game_Loop():
                 print ("You have a sword equipped")
             elif IsLeatherHideEquipped == True:
                 print("You are wearing a leather hide")
+            elif IsShieldEquipped == True:
+                print ("You have a shield equipped")
         elif selection == 4:
             save_game()
         elif selection == 5:
