@@ -208,7 +208,7 @@ def Combat():
             os.system('cls')
             player.gold += enemy.gold
             print()
-            print("You have received {}!".format(enemy.gold) + " Gold")
+            print("You have received {}".format(enemy.gold) + " Gold")
             print()
             print("You have valorously slain the  {}!".format(enemy.name))
             #go = False
