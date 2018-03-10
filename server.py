@@ -18,7 +18,7 @@ def main_loop(tcp_port, udp_port, rooms):
     udp_server.start()
     tcp_server.start()
     is_running = True
-    print "Simple Game Server."
+    print "Welcome to Dark Dome Online."
     print "--------------------------------------"
     print "list : list rooms"
     print "room #room_id : print room information"
@@ -310,7 +310,7 @@ if __name__ == "__main__":
     """
     Start a game server
     """
-    parser = argparse.ArgumentParser(description='Simple game server')
+    parser = argparse.ArgumentParser(description='Welcome to Dark Dome Online')
     parser.add_argument('--tcpport',
                         dest='tcp_port',
                         help='Listening tcp port',
