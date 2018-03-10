@@ -1,1 +1,1 @@
-{"players": [{"py/object": "classes.Human", "armor": 10, "gold": 950, "health": 100, "name": "Lego", "strength": 25}]}
+{"players": [{"py/object": "classes.Human", "armor": 10, "experience": 0, "gold": 100, "health": 100, "name": "Walter", "strength": 10, "weapon": {"py/object": "classes.Weapon", "armvalue": 0, "cost": 0, "hvalue": 0, "name": "No weapon equipped", "strvalue": 0}}]}

@@ -2,8 +2,8 @@
 
 #Import required modules
 import jsonpickle, os, sys, time
-from classes import AI, Human, Item
-from util import SpawnMonster
+from classes import Human, Item, Layer
+from util import SpawnMonster, GetWeapon, GetLayer
 from random import randint
 #main game
 
@@ -13,11 +13,9 @@ IsShopLocked = False
 IsWeaponEquipped = False
 IsShieldEquipped = False
 IsArmorEquipped = False
-IsDaggerEquipped = False
-IsSwordEquipped = False
-IsScimitarEquipped = False
-IsLongswordEquipped = False
 IsLeatherHideEquipped = False
+time_since_attack = time.clock()
+layer = GetLayer(0)
 SAVEGAME_FILENAME = 'DDSave.json'
 game_state = dict()
 
@@ -55,17 +53,11 @@ def initialize_game():
 ###Main game functions###
 #Function for the shop
 def Shop():
-    global IsDaggerEquipped
-    global IsSwordEquipped
-    global IsScimitarEquipped
-    global IsLongswordEquipped
+
     global game_state
     player = game_state['players'][0]
-    dagger = Item('Dagger', 0, 0, 10)
-    sword = Item('Sword', 0, 0, 15)
-    scimitar = Item('Scimitar', 20, 0, 43)
-    longsword = Item('Longsword', 50, 40, 96)
-    leather_hide = Item('Leather Hide', 5, 5, 0)
+    
+    leather_hide = Item('Leather Hide', 5, 5, 0,0)
     if IsShopLocked == True:
         print("The shop is locked!\nPlease go back and continue your adventure!")
     else:
@@ -75,91 +67,43 @@ def Shop():
 
     if selection == 1:
         print("Weapons shop")
-        print("1. Bronze Dagger: $20\n2. Bronze Sword: $50\n3. Bronze Scimitar: $100\n4. Bronze Longsword: $1.000")
+        global IsWeaponEquipped
+        if not IsWeaponEquipped:
+            weapon = GetWeapon(0)
+        else:
+            weapon = GetWeapon(player.weapon.index + 1)
+        print("1. {!s} - {} gold\n2. Go back.".format(weapon.name, weapon.cost))
         wpnselection = int(input("Enter a value: "))
 
-        if wpnselection == 1:
-            if IsDaggerEquipped == True:
-                print("You already have this weapon equipped...")
-                Game_Loop()
-            else:
-                dagger = Item('Dagger', 0, 0, 10)
-                IsDaggerEquipped = True
-                player.strength += dagger.strvalue
-                player.gold -= 20
-                print("strength increased to: {}".format(player.strength))
-                Game_Loop()
-
-        elif wpnselection == 2:
-            if IsSwordEquipped == True:
-                print("You already have this weapon equipped...")
-                Game_Loop()
-            elif IsDaggerEquipped == False:
-                print("You should get a dagger first...")
-                Game_Loop()
-            else:
-                sword = Item('Sword', 0, 0, 22)
-                IsSwordEquipped = True
-                IsDaggerEquipped = False
-                player.strength += sword.strvalue
-                player.strength -= dagger.strvalue
-                player.gold -= 50
-                print("strength increased to: {}".format(player.strength))
-                Game_Loop()
-
-        elif wpnselection == 3:
-            
-            if  IsScimitarEquipped == True:
-                print("You already have this weapon equipped...")
-                Game_Loop()
-            elif IsSwordEquipped == False:
-                print("You should get a sword first...")
-                Game_Loop()
-            else:
-                scimitar = Item('Scimitar', 25, 0, 43)
-                IsScimitarEquipped = True
-                IsSwordEquipped = False
-                player.health += scimitar.hvalue
-                player.strength += scimitar.strvalue
-                player.strength -= sword.strvalue
-                player.gold -= 100
-                print("strength increased to: {}".format(player.strength))
-                Game_Loop()
-         
-        elif wpnselection == 4:
-            
-            if  IsLongswordEquipped == True:
-                print("You already have this weapon equipped...")
-                Game_Loop()
-            elif IsScimitarEquipped == False:
-                print("You should get a scimitar first...")
-                Game_Loop()
-            else:
-                longsword = Item('Longsword', 50, 40, 96)
-                IsLongswordEquipped = True
-                IsScimitarEquipped = False
-                player.strength += longsword.strvalue
-                player.strength -= scimitar.strvalue
-                player.gold -= 1000
-                print("strength increased to: {}".format(player.strength))
-                Game_Loop()
-            
-        elif wpnselection == 5:
+        if wpnselection == 1 and player.gold >= weapon.cost:
+            player.gold -= weapon.cost
+            player.strength += weapon.strvalue
+            player.weapon = weapon
+            IsWeaponEquipped = True
+            print("strength increased to: {}".format(player.strength))
             Game_Loop()
+        elif wpnselection == 2:
+            Game_Loop()
+        else:
+            print("Not enough gold.")
+            time.sleep(2)
 
     elif selection == 2:
         if player.gold >= 20:
             print ("Armor Shop")
             print ("1. Leather hide\n2. Bronze Shield")
             armselection = int(input("enter a value: "))
-
+        else:
+            print("Not enough gold.")
+            time.sleep(2)
+            Game_Loop()
         if armselection == 1:
             global IsLeatherHideEquipped
             if IsLeatherHideEquipped == True:
                 print("You are already wearing armor!")
                 Game_Loop()
             else:
-                leather_hide = Item('Leather Hide', 5, 5, 0)
+                leather_hide = Item('Leather Hide', 5, 5, 0, 0)
                 IsLeatherHideEquipped = True
                 player.health += leather_hide.hvalue
                 player.gold -= 20
@@ -172,7 +116,7 @@ def Shop():
                 print("You are already caryying a shield!")
                 Game_Loop()
             else:
-                bronze_shield = Item('Bronze Shield', 0, 10, 0)
+                bronze_shield = Item('Bronze Shield', 0, 10, 0, 0)
                 IsShieldEquipped = True
                 player.armor += bronze_shield.armvalue
                 player.gold -= 30
@@ -185,23 +129,45 @@ def Shop():
     elif selection == 4:
         Game_Loop()
 
+#Function for 'playing' a layer
+def PlayLayer(layer):
+    while True:
+        os.system('cls')
+        print(layer.lore)
+        print("\n")
+        print("1. Go up.")
+        if layer.index > 0:
+            print("2. Go down.")
+        else:
+            print("2. Go out.")
+        if time.clock() - time_since_attack >= layer.attack_frequency:
+            enemy = SpawnMonster(layer.index)
+            Combat(enemy, layer)
+        selection = int(input("Enter a value: "))
+        if selection == 1:
+            PlayLayer(GetLayer(layer.index+1))
+        elif selection == 2:
+            Game_Loop()
+
 #Function for combat
-def Combat():
+def Combat(enemy, layer):
     global game_state
     player = game_state['players'][0]
-    enemy = SpawnMonster(randint (1, 17))
-    global go
-    while go == True:
-        pdmg = randint (0, player.strength)
+    while True:
+        #Idk, nesto sam mislio tu, ali mi se nije dalo napravit do kraja ovo
+        if enemy.armor > player.strength:
+            pdmg = 0
+        else:
+            pdmg = randint (0, player.strength)
         edmg = randint (0, enemy.strength)
         enemy.health -= pdmg
 
         if player.health <= 0:
             os.system('cls')
             print()
-            print("You have been pwnd by a mere {}...".format(enemy.name))
+            print("You have been pwnd by a mere {!s}...".format(enemy.name))
             #go = False
-            leave = input("press enter to exit")
+            input("press enter to exit")
             Game_Loop()
 
         elif enemy.health <= 0:
@@ -210,25 +176,25 @@ def Combat():
             print()
             print("You have received {}".format(enemy.gold) + " Gold")
             print()
-            print("You have valorously slain the  {}!".format(enemy.name))
+            print("You have valorously slain the  {!s}!".format(enemy.name))
             #go = False
-            leave = input("press any key to exit")
-            Game_Loop()
-
+            time.sleep(3)
+            global time_since_attack
+            time_since_attack = time.clock()
+            PlayLayer(layer)
         else:
             os.system('cls')
-            with open("test.txt", "r") as in_file:
-                text = in_file.read()
-            print(text)
+            print("You are attacked by an enemy on {}".format(layer.name))
             enemy.print_data()
             player.health -= edmg
             print()
-            print("You attack the enemy {} and deal {} damage!".format(enemy.name, pdmg))
+            print("You attack the enemy and deal {} damage!".format(pdmg))
             print("The enemy has {} health left!".format(enemy.health))
             print()
-            print("The enemy {} attacks you for {} damage!".format(enemy.name, edmg))
+            print("The enemy attacks you for {} damage!".format(edmg))
             print("You have {} health left!".format(player.health))
-            time.sleep(3)
+            if player.health > 0:
+                time.sleep(3)
 
 #The main game loop
 def Game_Loop():
@@ -249,16 +215,12 @@ def Game_Loop():
         if selection == 1:
             Shop()
         elif selection == 2:
-            Combat()
+            PlayLayer(layer)
         elif selection == 3:
             player = game_state['players'][0]            
             print()
-            print("Your players stats:\nHealth: {}\nArmor: {}\nStrength: {}\nGold: {}".format(player.health, player.armor, player.strength, player.gold))
-            if IsDaggerEquipped == True:
-                print("You have a dagger equipped")
-            elif IsSwordEquipped == True:
-                print ("You have a sword equipped")
-            elif IsLeatherHideEquipped == True:
+            print("Your players stats:\nHealth: {}\nArmor: {}    Weapon: {}\nStrength: {}\nGold: {}".format(player.health, player.armor, player.weapon.name, player.strength, player.gold))
+            if IsLeatherHideEquipped == True:
                 print("You are wearing a leather hide")
             elif IsShieldEquipped == True:
                 print ("You have a shield equipped")

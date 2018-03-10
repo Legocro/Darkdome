@@ -1,0 +1,2 @@
+Ground floor| You enter the Dark Dome, the inside seems dark, even though it's daytime outside, quite peculiar.| 20| 3| 0
+First floor| You go up the stairs, light gets lower, monsters get stronger, what next?| 35| 5| 1

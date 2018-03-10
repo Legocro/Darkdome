@@ -18,46 +18,57 @@ def main_loop(tcp_port, udp_port, rooms):
     udp_server.start()
     tcp_server.start()
     is_running = True
-    print "Welcome to Dark Dome Online."
-    print "--------------------------------------"
-    print "list : list rooms"
-    print "room #room_id : print room information"
-    print "user #user_id : print user information"
-    print "quit : quit server"
-    print "--------------------------------------"
+    print ("Welcome to Dark Dome Online.")
+    print ("--------------------------------------")
+    print ("list : list rooms")
+    print ("room #room_id : print (room information)")
+    print ("user #user_id : print (user information)")
+    print ("quit : quit server")
+    print ("--------------------------------------")
 
     while is_running:
-        cmd = raw_input("cmd >")
+        cmd = input("cmd >")
         if cmd == "list":
-            print "Rooms :"
-            for room_id, room in rooms.rooms.iteritems():
-                print "%s - %s (%d/%d)" % (room.identifier,
+            print ("Rooms :")
+            for room_id, room in rooms.rooms.items():
+                print ("%s - %s (%d/%d)" % (room.identifier,
                                            room.name,
                                            len(room.players),
-                                           room.capacity)
+                                           room.capacity))
         elif cmd.startswith("room "):
-            try:
-                id = cmd[5:]
+            try: 
+                id = int(cmd[5:])
+                room = list(rooms.rooms.values())[id]
+                print(room)
+            except IndexError:
+                print("Only %d rooms present, index %d not valid." % (len(rooms.rooms), id)) 
+            except ValueError:
+                id = str(cmd[5:])
                 room = rooms.rooms[id]
-                print "%s - %s (%d/%d)" % (room.identifier,
+            except KeyError:
+                print("Error while getting room information")
+            try:
+                #id = cmd[5:]
+                #room = rooms.rooms[id]
+                print ("%s - %s (%d/%d)" % (room.identifier,
                                            room.name,
                                            len(room.players),
-                                           room.capacity)
-                print "Players :"
+                                           room.capacity))
+                print ("Players :")
                 for player in room.players:
-                    print player.identifier
+                    print ("%s - %s" % player.name)
             except:
-                print "Error while getting room informations"
+                print ("Error while getting room informations")
         elif cmd.startswith("user "):
             try:
                 player = rooms.players[cmd[5:]]
-                print "%s : %s:%d" % (player.identifier,
+                print ("%s : %s:%d" % (player.identifier,
                                       player.udp_addr[0],
-                                      player.udp_addr[1])
+                                      player.udp_addr[1]))
             except:
-                print "Error while getting user informations"
+                print ("Error while getting user informations")
         elif cmd == "quit":
-            print "Shutting down  server..."
+            print ("Shutting down  server...")
             udp_server.is_listening = False
             tcp_server.is_listening = False
             is_running = False
@@ -127,6 +138,7 @@ class UdpServer(Thread):
                                                 payload['message'],
                                                 self.sock)
                             except:
+                                print("ERROR")
                                 pass
                         elif action == "sendto":
                             try:
@@ -140,12 +152,12 @@ class UdpServer(Thread):
                     finally:
                         self.lock.release()
                 except RoomNotFound:
-                    print "Room not found"
+                    print ("Room not found")
 
             except KeyError:
-                print "Json from %s:%s is not valid" % addr
+                print ("Json from %s:%s is not valid" % addr)
             except ValueError:
-                print "Message from %s:%s is not valid json string" % addr
+                print ("Message from %s:%s is not valid json string" % addr)
 
         self.stop()
 
@@ -223,10 +235,10 @@ class TcpServer(Thread):
                 finally:
                     self.lock.release()
             except KeyError:
-                print "Json from %s:%s is not valid" % addr
+                print ("Json from %s:%s is not valid" % addr)
                 conn.send("Json is not valid")
             except ValueError:
-                print "Message from %s:%s is not valid json string" % addr
+                print ("Message from %s:%s is not valid json string" % addr)
                 conn.send("Message is not a valid json string")
 
             conn.close()
@@ -250,9 +262,9 @@ class TcpServer(Thread):
 
         if identifier is not None:
             if identifier not in self.rooms.players.keys():
-                print "Unknown identifier %s for %s:%s" % (identifier,
+                print ("Unknown identifier %s for %s:%s" % (identifier,
                                                            addr[0],
-                                                           addr[1])
+                                                           addr[1]))
                 sock.send(self.msg % {"success": "False",
                                       "message": "Unknown identifier"})
                 return 0
@@ -322,7 +334,7 @@ if __name__ == "__main__":
     parser.add_argument('--capacity',
                         dest='room_capacity',
                         help='Max players per room',
-                        default="2")
+                        default="3")
 
     args = parser.parse_args()
     rooms = Rooms(int(args.room_capacity))
