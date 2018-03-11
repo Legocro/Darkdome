@@ -14,9 +14,6 @@ class Human(Character):
     def __init__(self, health, armor, strength, gold):
         Character.__init__(self, health, armor, strength, gold)
         self.name = input("Please enter your name > ")
-        self.health = health
-        self.armor = armor
-        self.strength = strength
         self.experience = 0
         self.weapon = Weapon("No weapon equipped", 0,0)
 
