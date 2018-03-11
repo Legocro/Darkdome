@@ -1,2 +1,7 @@
 Ground floor| You enter the Dark Dome, the inside seems dark, even though it's daytime outside, quite peculiar.| 20| 3| 0
 First floor| You go up the stairs, light gets lower, monsters get stronger, what next?| 35| 5| 1
+Second floor| You go up the stairs, light gets lower, monsters get stronger, what next?| 45| 8| 2
+Third floor| You go up the stairs, light gets lower, monsters get stronger, what next?| 55| 10| 3
+Fourth floor| You go up the stairs, light gets lower, monsters get stronger, what next?| 65| 12| 4
+Fifth floor| You go up the stairs, light gets lower, monsters get stronger, what next?| 75| 14| 5
+Sixth floor| You have reached the final floor. Can you defeat the ultimate boss and become the Dome Master?| 85| 17| 6

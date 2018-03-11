@@ -1,3 +1,45 @@
-Dagger, 10, 20, 0
-Sword, 15, 40, 1
-Longsword, 40, 100, 2
+Bronze Dagger, 10, 20, 0
+Bronze Sword, 15, 40, 1
+Bronze Longsword, 40, 100, 2
+Bronze Scimitar, 60, 140, 3
+Bronze 2h Sword, 90, 220, 4
+Iron Dagger, 70, 180, 5
+Iron Sword, 80, 250, 6
+Iron Longsword, 110, 280, 7
+Iron Scimitar, 140, 320, 8
+Iron 2h Sword, 180, 500, 9
+Lead Dagger, 160, 420, 10
+Lead Sword, 180, 550, 11
+Lead Longsword, 200, 600, 12
+Lead Scimitar, 230, 720, 13
+Lead 2h Sword, 300, 980, 14
+Steel Dagger, 250, 800, 15
+Steel Sword, 280, 950, 16
+Steel Longsword, 310, 1050, 17
+Steel Scimitar, 340, 1250, 18
+Steel 2h Sword, 450, 1700, 19
+Mithril Dagger, 380, 1500, 20
+Mithril Sword, 420, 1800, 21
+Mithril Longsword, 470, 2000, 22
+Mithril Scimitar, 500, 2300, 23
+Mithril 2h Sword, 700, 2500, 24
+Adamant Dagger, 550, 2400, 25
+Adamant Sword, 650, 2480, 26
+Adamant Longsword, 720, 2700, 27
+Adamant Scimitar, 780, 3000, 28
+Adamant 2h Sword, 950, 4000, 29
+Flaming Dagger, 800, 3300, 30
+Flaming Sword, 870, 3700, 31
+Flaming Longsword, 980, 4200, 32
+Flaming Scimitar, 1050, 4400, 33
+Flaming 2h Sword, 1400, 5000, 34
+Dragon Dagger, 1100, 4600, 35
+Dragon Sword, 1250, 4800, 36
+Dragon Longsword, 1500, 5500, 37
+Dragon Scimitar, 1650, 5700, 38
+Dragon 2h Sword, 1900, 6200, 39
+Orgonite Dagger, 1750, 5900, 40
+Orgonite Sword, 1820, 6080, 41
+Orgonite Longsword, 2000, 6500, 42
+Orgonite Scimitar, 2500, 13000, 43
+Orgonite 2h Sword, 3500, 25000, 44
