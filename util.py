@@ -33,5 +33,3 @@ def slow_type(t,speed):
         sys.stdout.flush()
         time.sleep(random.random()*10.0/speed)
     print ("")
-
-slow_type("Yo what's up, I'm lego, how's it going", typing_speed)
