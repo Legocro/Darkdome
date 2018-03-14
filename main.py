@@ -63,6 +63,7 @@ def Shop():
     else:
         print()
         print("Welcome to the Dome shop! What would you like to buy?\n1. Weapons\n2. Armor\n3. Go back")
+        print('\033[0;35m', end="")
         selection = int(input("Enter a value: "))
 
     if selection == 1:
@@ -72,7 +73,7 @@ def Shop():
             weapon = GetWeapon(0)
         else:
             weapon = GetWeapon(player.weapon.index + 1)
-        print("1. {!s} - {} gold\n2. Go back.".format(weapon.name, weapon.cost))
+        print("1. {!s} - {} gold\n3. Go back.".format(weapon.name, weapon.cost))
         wpnselection = int(input("Enter a value: "))
 
         if wpnselection == 1 and player.gold >= weapon.cost:
