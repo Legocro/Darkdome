@@ -5,15 +5,11 @@ import jsonpickle, os, sys, time
 from classes import Human, Item, Layer
 from util import SpawnMonster, GetWeapon, GetLayer
 from random import randint
+from shop import weapons
 #main game
 
 #Variables
 go = True
-IsShopLocked = False
-IsWeaponEquipped = False
-IsShieldEquipped = False
-IsArmorEquipped = False
-IsLeatherHideEquipped = False
 time_since_attack = time.clock()
 layer = GetLayer(0)
 SAVEGAME_FILENAME = 'DDSave.json'
@@ -57,21 +53,13 @@ def Shop():
     global game_state
     player = game_state['players'][0]
     
-    leather_hide = Item('Leather Hide', 5, 5, 0,0)
-    if IsShopLocked == True:
-        print("The shop is locked!\nPlease go back and continue your adventure!")
-    else:
-        print()
-        print("Welcome to the Dome shop! What would you like to buy?\n1. Weapons\n2. Armor\n3. Go back")
-        selection = int(input("Enter a value: "))
+    print()
+    print("Welcome to the Dome shop! What would you like to buy?\n1. Weapons\n2. Armor\n3. Go back")
+    selection = int(input("Enter a value: "))
 
     if selection == 1:
         print("Weapons shop")
-        global IsWeaponEquipped
-        if not IsWeaponEquipped:
-            weapon = GetWeapon(0)
-        else:
-            weapon = GetWeapon(player.weapon.index + 1)
+        weapon = weapons
         print("1. {!s} - {} gold".format(weapon.name, weapon.cost))
 
         print("2. Go back")
