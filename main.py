@@ -5,7 +5,6 @@ import jsonpickle, os, sys, time
 from classes import Human, Item, Layer
 from util import SpawnMonster, GetWeapon, GetLayer
 from random import randint
-from shop import weapons
 #main game
 
 #Variables
@@ -59,7 +58,7 @@ def Shop():
 
     if selection == 1:
         print("Weapons shop")
-        weapon = weapons
+        weapon = GetWeapon(0)
         print("1. {!s} - {} gold".format(weapon.name, weapon.cost))
 
         print("2. Go back")
@@ -142,16 +141,16 @@ def PlayLayer(layer):
 #Function for combat
 def Combat(enemy, layer):
     global game_state
+    
     player = game_state['players'][0]
     while True:
         #Idk, nesto sam mislio tu, ali mi se nije dalo napravit do kraja ovo
         if enemy.armor > player.strength:
             pdmg = 0
         else:
-            pdmg = randint (0, player.strength)
+            pdmg = pdmg = (Character.strength * (randint(7, 12)) * 10)
         edmg = randint (0, enemy.strength)
-        enemy.health -= pdmg
-
+    
         if player.health <= 0:
             os.system('cls')
             print()
@@ -179,6 +178,7 @@ def Combat(enemy, layer):
             player.health -= edmg
             print()
             print("You attack the enemy and deal {} damage!".format(pdmg))
+            enemy.health -= pdmg
             print("The enemy has {} health left!".format(enemy.health))
             print()
             print("The enemy attacks you for {} damage!".format(edmg))
